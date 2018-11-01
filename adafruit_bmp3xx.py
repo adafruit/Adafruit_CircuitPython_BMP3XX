@@ -108,8 +108,8 @@ class BMP3XX:
     def pressure_oversampling(self, oversample):
         if oversample not in _OSR_SETTINGS:
             raise ValueError("Oversampling must be one of: {}".format(_OSR_SETTINGS))
-        OSR = self._read_byte(_REGISTER_OSR) & 0xF8 | _OSR_SETTINGS.index(oversample)
-        self._write_register_byte(_REGISTER_OSR, OSR)
+        new_setting = self._read_byte(_REGISTER_OSR) & 0xF8 | _OSR_SETTINGS.index(oversample)
+        self._write_register_byte(_REGISTER_OSR, new_setting)
 
     @property
     def temperature_oversampling(self):
@@ -120,8 +120,8 @@ class BMP3XX:
     def temperature_oversampling(self, oversample):
         if oversample not in _OSR_SETTINGS:
             raise ValueError("Oversampling must be one of: {}".format(_OSR_SETTINGS))
-        OSR = self._read_byte(_REGISTER_OSR) & 0xC7 | _OSR_SETTINGS.index(oversample) << 3
-        self._write_register_byte(_REGISTER_OSR, OSR)
+        new_setting = self._read_byte(_REGISTER_OSR) & 0xC7 | _OSR_SETTINGS.index(oversample) << 3
+        self._write_register_byte(_REGISTER_OSR, new_setting)
 
     @property
     def filter_coefficient(self):
@@ -143,7 +143,7 @@ class BMP3XX:
     def _read(self):
         """Returns a tuple for temperature and pressure."""
         # OK, pylint. This one is all kinds of stuff you shouldn't worry about.
-        # pylint: disable=bad-white-space, invalid-name, too-many-locals
+        # pylint: disable=bad-whitespace, invalid-name, too-many-locals
 
         # Perform one measurement in forced mode
         self._write_register_byte(_REGISTER_CONTROL, 0x13)
@@ -188,7 +188,7 @@ class BMP3XX:
         # pressure in Pa, temperature in deg C
         return pressure, temperature
 
-    def _read_coefficients(self): # pylint: disable=bad-white-space
+    def _read_coefficients(self): # pylint: disable=bad-whitespace
         """Read & save the calibration coefficients"""
         coeff = self._read_register(_REGISTER_CAL_DATA, 21)
         # See datasheet, pg. 27, table 22
