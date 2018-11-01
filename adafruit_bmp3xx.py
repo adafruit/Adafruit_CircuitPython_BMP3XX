@@ -32,8 +32,7 @@ Implementation Notes
 
 **Hardware:**
 
-* `Adafruit BMP388 - Precision Barometric Pressure and Altimeter
-   <https://www.adafruit.com/product/3966>`_
+* `Adafruit BMP388 - Precision Barometric Pressure and Altimeter <https://www.adafruit.com/product/3966>`_
 
 **Software and Dependencies:**
 
@@ -188,7 +187,8 @@ class BMP3XX:
         # pressure in Pa, temperature in deg C
         return pressure, temperature
 
-    def _read_coefficients(self): # pylint: disable=bad-whitespace
+    def _read_coefficients(self):
+        # pylint: disable=bad-whitespace
         """Read & save the calibration coefficients"""
         coeff = self._read_register(_REGISTER_CAL_DATA, 21)
         # See datasheet, pg. 27, table 22
