@@ -258,6 +258,7 @@ class BMP3XX_SPI(BMP3XX):
         """Low level register reading over SPI, returns a list of values"""
         result = bytearray(length)
         with self._spi as spi:
+            # pylint: disable=no-member
             spi.write(bytes((0x80 | register, 0x00)))
             spi.readinto(result)
         return result
@@ -265,4 +266,5 @@ class BMP3XX_SPI(BMP3XX):
     def _write_register_byte(self, register, value):
         """Low level register writing over SPI, writes one 8-bit value"""
         with self._spi as spi:
+            # pylint: disable=no-member
             spi.write(bytes((register & 0x7F, value & 0xFF)))
