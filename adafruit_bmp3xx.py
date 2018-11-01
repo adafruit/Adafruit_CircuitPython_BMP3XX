@@ -32,7 +32,7 @@ Implementation Notes
 
 **Hardware:**
 
-* `Adafruit BMP388 - Precision Barometric Pressure and Altimeter <https://www.adafruit.com/product/3966>`_
+* `Adafruit BMP388 <https://www.adafruit.com/product/3966>`_
 
 **Software and Dependencies:**
 
@@ -199,7 +199,7 @@ class BMP3XX:
         self._temp_calib     = (  coeff[0]  / 2**-8.        ,   # T1
                                   coeff[1]  / 2**30.        ,   # T2
                                   coeff[2]  / 2**48.        )   # T3
-        self._pressure_calib = ( (coeff[3]-2**14.) / 2**20. ,   # P1 
+        self._pressure_calib = ( (coeff[3]-2**14.) / 2**20. ,   # P1
                                  (coeff[4]-2**14.) / 2**29. ,   # P2
                                   coeff[5]  / 2**32.        ,   # P3
                                   coeff[6]  / 2**37.        ,   # P4
