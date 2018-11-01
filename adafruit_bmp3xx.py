@@ -94,9 +94,9 @@ class BMP3XX:
 
     @property
     def altitude(self):
-        """The altitude based on the sea level pressure (`sea_level_pressure`) - which you must
-           enter ahead of time)"""
-        return 44330 * (1 - (self.pressure / self.sea_level_pressure)**0.1903)
+        """The altitude in meters based on the currently set sea level pressure."""
+        # see https://www.weather.gov/media/epz/wxcalc/pressureAltitude.pdf
+        return 44307.7 * (1 - (self.pressure / self.sea_level_pressure)**0.190284)
 
     @property
     def pressure_oversampling(self):
@@ -168,19 +168,19 @@ class BMP3XX:
         P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11 = self._pressure_calib
 
         pd1 = P6 * temperature
-        pd2 = P7 * temperature**2
-        pd3 = P8 * temperature**3
+        pd2 = P7 * temperature**2.
+        pd3 = P8 * temperature**3.
         po1 = P5 + pd1 + pd2 + pd3
 
         pd1 = P2 * temperature
-        pd2 = P3 * temperature**2
-        pd3 = P4 * temperature**3
+        pd2 = P3 * temperature**2.
+        pd3 = P4 * temperature**3.
         po2 = adc_p * (P1 + pd1 + pd2 + pd3)
 
-        pd1 = adc_p**2
+        pd1 = adc_p**2.
         pd2 = P9 + P10 * temperature
         pd3 = pd1 * pd2
-        pd4 = pd3 + P11 * adc_p**3
+        pd4 = pd3 + P11 * adc_p**3.
 
         pressure = po1 + po2 + pd4
 
@@ -188,26 +188,28 @@ class BMP3XX:
         return pressure, temperature
 
     def _read_coefficients(self):
-        # pylint: disable=bad-whitespace
+        # pylint: disable=bad-whitespace, bad-continuation
         """Read & save the calibration coefficients"""
         coeff = self._read_register(_REGISTER_CAL_DATA, 21)
         # See datasheet, pg. 27, table 22
         coeff = struct.unpack("<HHbhhbbHHbbhbb", coeff)
         # See datasheet, sec 9.1
-        self._temp_calib = ( coeff[0] / 2**-8 ,   # T1
-                             coeff[1] / 2**30 ,   # T2
-                             coeff[2] / 2**48 )   # T3
-        self._pressure_calib = ( (coeff[3]-2**14) / 2**20 ,   # P1 
-                                 (coeff[4]-2**14) / 2**29 ,   # P2
-                                  coeff[5] / 2**32        ,   # P3
-                                  coeff[6] / 2**37        ,   # P4
-                                  coeff[7] / 2**-3        ,   # P5
-                                  coeff[8] / 2**6         ,   # P6
-                                  coeff[9] / 2**8         ,   # P7
-                                  coeff[10] / 2**15       ,   # P8
-                                  coeff[11] / 2**48       ,   # P9
-                                  coeff[12] / 2**48       ,   # P10
-                                  coeff[13] / 2**65       )   # P11
+        # Note: forcing float math to prevent issues with boards that
+        #       do not support long ints for 2**<large int>
+        self._temp_calib     = (  coeff[0]  / 2**-8.        ,   # T1
+                                  coeff[1]  / 2**30.        ,   # T2
+                                  coeff[2]  / 2**48.        )   # T3
+        self._pressure_calib = ( (coeff[3]-2**14.) / 2**20. ,   # P1 
+                                 (coeff[4]-2**14.) / 2**29. ,   # P2
+                                  coeff[5]  / 2**32.        ,   # P3
+                                  coeff[6]  / 2**37.        ,   # P4
+                                  coeff[7]  / 2**-3.        ,   # P5
+                                  coeff[8]  / 2**6.         ,   # P6
+                                  coeff[9]  / 2**8.         ,   # P7
+                                  coeff[10] / 2**15.        ,   # P8
+                                  coeff[11] / 2**48.        ,   # P9
+                                  coeff[12] / 2**48.        ,   # P10
+                                  coeff[13] / 2**65.        )   # P11
 
     def _read_byte(self, register):
         """Read a byte register value and return it"""
