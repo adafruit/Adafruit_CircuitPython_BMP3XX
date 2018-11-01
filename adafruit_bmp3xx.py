@@ -246,11 +246,11 @@ class BMP3XX_I2C(BMP3XX):
 
 class BMP3XX_SPI(BMP3XX):
     """Driver for SPI connected BMP3XX."""
-    def __init__  (self, spi, cs):
+    def __init__(self, spi, cs):
         import adafruit_bus_device.spi_device as spi_device
         self._spi = spi_device.SPIDevice(spi, cs)
         # toggle CS low/high to put BMP3XX in SPI mode
-        with self._spi as spi:
+        with self._spi:
             time.sleep(0.001)
         super().__init__()
 
