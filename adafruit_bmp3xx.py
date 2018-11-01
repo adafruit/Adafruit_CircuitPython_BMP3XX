@@ -242,4 +242,27 @@ class BMP3XX_I2C(BMP3XX):
     def _write_register_byte(self, register, value):
         """Low level register writing over I2C, writes one 8-bit value"""
         with self._i2c as i2c:
-            i2c.write(bytes([register & 0xFF, value & 0xFF]))
+            i2c.write(bytes((register & 0xFF, value & 0xFF)))
+
+class BMP3XX_SPI(BMP3XX):
+    """Driver for SPI connected BMP3XX."""
+    def __init__  (self, spi, cs):
+        import adafruit_bus_device.spi_device as spi_device
+        self._spi = spi_device.SPIDevice(spi, cs)
+        # toggle CS low/high to put BMP3XX in SPI mode
+        with self._spi as spi:
+            time.sleep(0.001)
+        super().__init__()
+
+    def _read_register(self, register, length):
+        """Low level register reading over SPI, returns a list of values"""
+        result = bytearray(length)
+        with self._spi as spi:
+            spi.write(bytes((0x80 | register, 0x00)))
+            spi.readinto(result)
+        return result
+
+    def _write_register_byte(self, register, value):
+        """Low level register writing over SPI, writes one 8-bit value"""
+        with self._spi as spi:
+            spi.write(bytes((register & 0x7F, value & 0xFF)))
