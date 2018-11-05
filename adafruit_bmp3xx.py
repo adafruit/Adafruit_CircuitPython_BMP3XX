@@ -80,7 +80,8 @@ class BMP3XX:
             raise RuntimeError('Failed to find BMP3XX! Chip ID 0x%x' % chip_id)
         self._read_coefficients()
         self.reset()
-        self.sea_level_pressure = 1013.25 # hPa @ MSL
+        self.sea_level_pressure = 1013.25
+        """Sea level pressure in hPa."""
 
     @property
     def pressure(self):
