@@ -52,7 +52,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='adafruit temperature barometric pressure temp'
+    keywords='adafruit temperature barometric pressure temp '
              'bmp3xx bmp388 hardware micropython circuitpython',
 
     # You can just specify the packages manually here if your project is
