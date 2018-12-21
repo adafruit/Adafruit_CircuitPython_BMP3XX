@@ -9,8 +9,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.org/adafruit/Adafruit_CircuitPython_BMP3XX.svg?branch=master
-    :target: https://travis-ci.org/adafruit/Adafruit_CircuitPython_BMP3XX
+.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_BMP3XX.svg?branch=master
+    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_BMP3XX
     :alt: Build Status
 
 CircuitPython driver from BMP3XX Temperature and Barometric Pressure sensor.
