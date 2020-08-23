@@ -67,7 +67,6 @@ _REGISTER_ODR = const(0x1D)
 _REGISTER_CONFIG = const(0x1F)
 _REGISTER_CAL_DATA = const(0x31)
 _REGISTER_CMD = const(0x7E)
-# pylint: enable=bad-whitespace
 
 _OSR_SETTINGS = (1, 2, 4, 8, 16, 32)  # pressure and temperature oversampling settings
 _IIR_SETTINGS = (0, 2, 4, 8, 16, 32, 64, 128)  # IIR filter coefficients
@@ -151,7 +150,7 @@ class BMP3XX:
     def _read(self):
         """Returns a tuple for temperature and pressure."""
         # OK, pylint. This one is all kinds of stuff you shouldn't worry about.
-        # pylint: disable=bad-whitespace, invalid-name, too-many-locals
+        # pylint: disable=invalid-name, too-many-locals
 
         # Perform one measurement in forced mode
         self._write_register_byte(_REGISTER_CONTROL, 0x13)
@@ -197,7 +196,6 @@ class BMP3XX:
         return pressure, temperature
 
     def _read_coefficients(self):
-        # pylint: disable=bad-whitespace, bad-continuation
         """Read & save the calibration coefficients"""
         coeff = self._read_register(_REGISTER_CAL_DATA, 21)
         # See datasheet, pg. 27, table 22
