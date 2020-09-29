@@ -87,8 +87,9 @@ class BMP3XX:
     def read(self):
         """Read all pressure, temperature, and altitude values and return a tuple"""
         pressure, temperature = self._read()
-        altitude = 44307.7 * (1 - ((pressure / 100.0) / self.sea_level_pressure) ** 0.190284)
-        return (pressure / 100.0, temperature, altitude)
+        pressure = pressure / 100
+        altitude = 44307.7 * (1 - (pressure / self.sea_level_pressure) ** 0.190284)
+        return ((pressure), temperature, altitude)
 
     @property
     def pressure(self):
