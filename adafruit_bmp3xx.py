@@ -89,7 +89,7 @@ class BMP3XX:
         pressure, temperature = self._read()
         pressure = pressure / 100
         altitude = 44307.7 * (1 - (pressure / self.sea_level_pressure) ** 0.190284)
-        return ((pressure), temperature, altitude)
+        return (pressure, temperature, altitude)
 
     @property
     def pressure(self):
