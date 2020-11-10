@@ -18,6 +18,6 @@ bmp.temperature_oversampling = 2
 
 while True:
     print(
-        "Pressure: {:6.1f}  Temperature: {:5.2f}".format(bmp.pressure, bmp.temperature)
+        "Pressure: {:6.4f}  Temperature: {:5.2f}".format(bmp.pressure, bmp.temperature)
     )
     time.sleep(1)

@@ -54,7 +54,8 @@ from micropython import const
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_BMP3XX.git"
 
-_CHIP_ID = const(0x50)
+_BMP388_CHIP_ID = const(0x50)
+_BMP390_CHIP_ID = const(0x60)
 
 # pylint: disable=import-outside-toplevel
 _REGISTER_CHIPID = const(0x00)
@@ -77,7 +78,7 @@ class BMP3XX:
 
     def __init__(self):
         chip_id = self._read_byte(_REGISTER_CHIPID)
-        if _CHIP_ID != chip_id:
+        if chip_id != _BMP388_CHIP_ID and chip_id != _BMP390_CHIP_ID:
             raise RuntimeError("Failed to find BMP3XX! Chip ID 0x%x" % chip_id)
         self._read_coefficients()
         self.reset()
