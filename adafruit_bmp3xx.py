@@ -78,7 +78,7 @@ class BMP3XX:
 
     def __init__(self):
         chip_id = self._read_byte(_REGISTER_CHIPID)
-        if chip_id != _BMP388_CHIP_ID and chip_id != _BMP390_CHIP_ID:
+        if chip_id not in (_BMP388_CHIP_ID,_BMP390_CHIP_ID):
             raise RuntimeError("Failed to find BMP3XX! Chip ID 0x%x" % chip_id)
         self._read_coefficients()
         self.reset()
