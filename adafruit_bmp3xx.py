@@ -78,7 +78,7 @@ class BMP3XX:
 
     def __init__(self):
         chip_id = self._read_byte(_REGISTER_CHIPID)
-        if chip_id not in (_BMP388_CHIP_ID,_BMP390_CHIP_ID):
+        if chip_id not in (_BMP388_CHIP_ID, _BMP390_CHIP_ID):
             raise RuntimeError("Failed to find BMP3XX! Chip ID 0x%x" % chip_id)
         self._read_coefficients()
         self.reset()
@@ -238,7 +238,7 @@ class BMP3XX:
 
 class BMP3XX_I2C(BMP3XX):
     """Driver for I2C connected BMP3XX. Default address is 0x77 but another address can be passed
-       in as an argument"""
+    in as an argument"""
 
     def __init__(self, i2c, address=0x77):
         import adafruit_bus_device.i2c_device as i2c_device
