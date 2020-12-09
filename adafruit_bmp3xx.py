@@ -193,7 +193,7 @@ class BMP3XX:
 
         pressure = po1 + po2 + pd4
 
-        # pressure in Pa, temperature in deg C
+        # pressure in hPa, temperature in deg C
         return pressure, temperature
 
     def _read_coefficients(self):
