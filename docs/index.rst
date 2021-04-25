@@ -23,10 +23,12 @@ Table of Contents
 .. toctree::
     :caption: Tutorials
 
+    Adafruit BMP388 - Precision Barometric Pressure and Altimeter Learning Guide <https://learn.adafruit.com/adafruit-bmp388-bmp390-bmp3xx>
+
 .. toctree::
     :caption: Related Products
 
-    Adafruit BMP388 <https://www.adafruit.com/product/3966>
+    Adafruit BMP388 - Precision Barometric Pressure and Altimeter <https://www.adafruit.com/product/3966>
 
 .. toctree::
     :caption: Other Links

@@ -6,7 +6,7 @@
 `adafruit_bmp3xx`
 ====================================================
 
-CircuitPython driver from BMP3XX Temperature and Barometic Pressure sensor.
+CircuitPython driver from BMP388 Temperature and Barometric Pressure sensor.
 
 * Author(s): Carter Nelson
 
@@ -75,7 +75,7 @@ class BMP3XX:
 
     @property
     def temperature(self):
-        """The temperature in deg C."""
+        """The temperature in degrees Celsius"""
         return self._read()[1]
 
     @property
@@ -220,8 +220,38 @@ class BMP3XX:
 
 
 class BMP3XX_I2C(BMP3XX):
-    """Driver for I2C connected BMP3XX. Default address is 0x77 but another address can be passed
-    in as an argument"""
+    """Driver for I2C connected BMP3XX.
+
+    :param ~busio.I2C i2c: The I2C bus the BMP388 is connected to.
+    :param int address: I2C device address. Defaults to :const:`0x77`.
+                        but another address can be passed in as an argument
+
+    **Quickstart: Importing and using the BMP388**
+
+        Here is an example of using the :class:`BMP3XX_I2C` class.
+        First you will need to import the libraries to use the sensor
+
+        .. code-block:: python
+
+            import board
+            import adafruit_bmp3xx
+
+        Once this is done you can define your `board.I2C` object and define your sensor object
+
+        .. code-block:: python
+
+            i2c = board.I2C()   # uses board.SCL and board.SDA
+            bmp = adafruit_bmp3xx.BMP3XX_I2C(i2c)
+
+
+        Now you have access to the :attr:`temperature` and :attr:`pressure` attributes
+
+        .. code-block:: python
+
+            temperature = bmp.temperature
+            pressure = bmp.pressure
+
+    """
 
     def __init__(self, i2c, address=0x77):
         import adafruit_bus_device.i2c_device as i2c_device
@@ -244,7 +274,40 @@ class BMP3XX_I2C(BMP3XX):
 
 
 class BMP3XX_SPI(BMP3XX):
-    """Driver for SPI connected BMP3XX."""
+    """Driver for SPI connected BMP3XX.
+
+    :param ~busio.SPI spi: SPI device
+    :param ~digitalio.DigitalInOut cs: Chip Select
+
+
+    **Quickstart: Importing and using the BMP388**
+
+        Here is an example of using the :class:`BMP3XX_SPI` class.
+        First you will need to import the libraries to use the sensor
+
+        .. code-block:: python
+
+            import board
+            import adafruit_bmp3xx
+            from digitalio import DigitalInOut, Direction
+
+        Once this is done you can define your `board.SPI` object and define your sensor object
+
+        .. code-block:: python
+
+            spi = board.SPI()
+            cs = DigitalInOut(board.D5)
+            bmp = adafruit_bmp3xx.BMP3XX_SPI(spi, cs)
+
+
+        Now you have access to the :attr:`temperature` and :attr:`pressure` attributes
+
+        .. code-block:: python
+
+            temperature = bmp.temperature
+            pressure = bmp.pressure
+
+    """
 
     def __init__(self, spi, cs):
         import adafruit_bus_device.spi_device as spi_device
