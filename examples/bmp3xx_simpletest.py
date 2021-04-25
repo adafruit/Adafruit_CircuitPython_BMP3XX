@@ -3,16 +3,15 @@
 
 import time
 import board
-import busio
 import adafruit_bmp3xx
 
 # I2C setup
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = board.I2C()  # uses board.SCL and board.SDA
 bmp = adafruit_bmp3xx.BMP3XX_I2C(i2c)
 
 # SPI setup
 # from digitalio import DigitalInOut, Direction
-# spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
+# spi = board.SPI()
 # cs = DigitalInOut(board.D5)
 # bmp = adafruit_bmp3xx.BMP3XX_SPI(spi, cs)
 
