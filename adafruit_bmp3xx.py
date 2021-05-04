@@ -15,14 +15,17 @@ Implementation Notes
 
 **Hardware:**
 
-* `Adafruit BMP388 <https://www.adafruit.com/product/3966>`_
+* `Adafruit BMP388 - Precision Barometric Pressure and Altimeter
+  <https://www.adafruit.com/product/3966>`_ (Product ID: 3966)
 
 **Software and Dependencies:**
 
 * Adafruit CircuitPython firmware for the supported boards:
-  https://github.com/adafruit/circuitpython/releases
+  https://circuitpython.org/downloads
 
-# * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
+* Adafruit's Bus Device library:
+  https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
+
 """
 
 import time
