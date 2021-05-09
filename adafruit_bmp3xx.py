@@ -69,6 +69,7 @@ class BMP3XX:
         self._read_coefficients()
         self.reset()
         self.sea_level_pressure = 1013.25
+        self._wait_time = 0.002  # change this value to have faster reads if needed
         """Sea level pressure in hPa."""
 
     @property
@@ -144,7 +145,7 @@ class BMP3XX:
 
         # Wait for *both* conversions to complete
         while self._read_byte(_REGISTER_STATUS) & 0x60 != 0x60:
-            time.sleep(0.002)
+            time.sleep(self._wait_time)
 
         # Get ADC values
         data = self._read_register(_REGISTER_PRESSUREDATA, 6)
