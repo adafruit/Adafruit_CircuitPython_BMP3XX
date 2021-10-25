@@ -56,6 +56,11 @@ Usage Example
 
 See usage examples in the examples folder.
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/bmp3xx/en/latest/>`_.
+
 Contributing
 ============
 
