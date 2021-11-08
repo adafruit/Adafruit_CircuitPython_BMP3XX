@@ -258,7 +258,7 @@ class BMP3XX_I2C(BMP3XX):
     """
 
     def __init__(self, i2c, address=0x77):
-        import adafruit_bus_device.i2c_device as i2c_device
+        from adafruit_bus_device import i2c_device
 
         self._i2c = i2c_device.I2CDevice(i2c, address)
         super().__init__()
@@ -314,7 +314,7 @@ class BMP3XX_SPI(BMP3XX):
     """
 
     def __init__(self, spi, cs):
-        import adafruit_bus_device.spi_device as spi_device
+        from adafruit_bus_device import spi_device
 
         self._spi = spi_device.SPIDevice(spi, cs)
         # toggle CS low/high to put BMP3XX in SPI mode
