@@ -27,13 +27,8 @@ Implementation Notes
   https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 
 """
-
+import struct
 import time
-
-try:
-    import struct
-except ImportError:
-    import ustruct as struct
 
 from micropython import const
 
