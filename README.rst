@@ -2,7 +2,7 @@ Introduction
 ============
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-bmp3xx/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/bmp3xx/en/latest/
+    :target: https://docs.circuitpython.org/projects/bmp3xx/en/latest/
     :alt: Documentation Status
 
 .. image:: https://img.shields.io/discord/327254708534116352.svg
@@ -59,7 +59,7 @@ See usage examples in the examples folder.
 Documentation
 =============
 
-API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/bmp3xx/en/latest/>`_.
+API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/bmp3xx/en/latest/>`_.
 
 Contributing
 ============
