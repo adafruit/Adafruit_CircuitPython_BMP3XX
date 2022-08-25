@@ -214,7 +214,7 @@ class BMP3XX:
         """Read a byte register value and return it"""
         return self._read_register(register, 1)[0]
 
-    def _read_register(self, register: int, length: int) -> None:
+    def _read_register(self, register: int, length: int) -> bytearray:
         """Low level register reading, not implemented in base class"""
         raise NotImplementedError()
 
