@@ -32,6 +32,13 @@ import time
 
 from micropython import const
 
+try:
+    from typing import Tuple
+    from digitalio import DigitalInOut
+    from busio import I2C, SPI
+except ImportError:
+    pass
+
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_BMP3XX.git"
 
@@ -57,10 +64,10 @@ _IIR_SETTINGS = (0, 2, 4, 8, 16, 32, 64, 128)  # IIR filter coefficients
 class BMP3XX:
     """Base class for BMP3XX sensor."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         chip_id = self._read_byte(_REGISTER_CHIPID)
         if chip_id not in (_BMP388_CHIP_ID, _BMP390_CHIP_ID):
-            raise RuntimeError("Failed to find BMP3XX! Chip ID 0x%x" % chip_id)
+            raise RuntimeError(f"Failed to find BMP3XX! Chip ID {hex(chip_id)}")
         self._read_coefficients()
         self.reset()
         self.sea_level_pressure = 1013.25
@@ -68,69 +75,67 @@ class BMP3XX:
         """Sea level pressure in hPa."""
 
     @property
-    def pressure(self):
+    def pressure(self) -> float:
         """The pressure in hPa."""
         return self._read()[0] / 100
 
     @property
-    def temperature(self):
+    def temperature(self) -> float:
         """The temperature in degrees Celsius"""
         return self._read()[1]
 
     @property
-    def altitude(self):
+    def altitude(self) -> float:
         """The altitude in meters based on the currently set sea level pressure."""
         # see https://www.weather.gov/media/epz/wxcalc/pressureAltitude.pdf
         return 44307.7 * (1 - (self.pressure / self.sea_level_pressure) ** 0.190284)
 
     @property
-    def pressure_oversampling(self):
+    def pressure_oversampling(self) -> int:
         """The pressure oversampling setting."""
         return _OSR_SETTINGS[self._read_byte(_REGISTER_OSR) & 0x07]
 
     @pressure_oversampling.setter
-    def pressure_oversampling(self, oversample):
+    def pressure_oversampling(self, oversample: int) -> None:
         if oversample not in _OSR_SETTINGS:
-            raise ValueError("Oversampling must be one of: {}".format(_OSR_SETTINGS))
+            raise ValueError(f"Oversampling must be one of: {_OSR_SETTINGS}")
         new_setting = self._read_byte(_REGISTER_OSR) & 0xF8 | _OSR_SETTINGS.index(
             oversample
         )
         self._write_register_byte(_REGISTER_OSR, new_setting)
 
     @property
-    def temperature_oversampling(self):
+    def temperature_oversampling(self) -> int:
         """The temperature oversampling setting."""
         return _OSR_SETTINGS[self._read_byte(_REGISTER_OSR) >> 3 & 0x07]
 
     @temperature_oversampling.setter
-    def temperature_oversampling(self, oversample):
+    def temperature_oversampling(self, oversample: int) -> None:
         if oversample not in _OSR_SETTINGS:
-            raise ValueError("Oversampling must be one of: {}".format(_OSR_SETTINGS))
+            raise ValueError(f"Oversampling must be one of: {_OSR_SETTINGS}")
         new_setting = (
             self._read_byte(_REGISTER_OSR) & 0xC7 | _OSR_SETTINGS.index(oversample) << 3
         )
         self._write_register_byte(_REGISTER_OSR, new_setting)
 
     @property
-    def filter_coefficient(self):
+    def filter_coefficient(self) -> int:
         """The IIR filter coefficient."""
         return _IIR_SETTINGS[self._read_byte(_REGISTER_CONFIG) >> 1 & 0x07]
 
     @filter_coefficient.setter
-    def filter_coefficient(self, coef):
+    def filter_coefficient(self, coef: int) -> None:
         if coef not in _IIR_SETTINGS:
-            raise ValueError(
-                "Filter coefficient must be one of: {}".format(_IIR_SETTINGS)
-            )
+            raise ValueError(f"Filter coefficient must be one of: {_IIR_SETTINGS}")
         self._write_register_byte(_REGISTER_CONFIG, _IIR_SETTINGS.index(coef) << 1)
 
-    def reset(self):
+    def reset(self) -> None:
         """Perform a power on reset. All user configuration settings are overwritten
         with their default state.
         """
         self._write_register_byte(_REGISTER_CMD, 0xB6)
 
-    def _read(self):
+    def _read(self) -> Tuple[float, float]:
         """Returns a tuple for temperature and pressure."""
         # OK, pylint. This one is all kinds of stuff you shouldn't worry about.
         # pylint: disable=invalid-name, too-many-locals
@@ -178,7 +183,7 @@ class BMP3XX:
         # pressure in hPa, temperature in deg C
         return pressure, temperature
 
-    def _read_coefficients(self):
+    def _read_coefficients(self) -> None:
         """Read & save the calibration coefficients"""
         coeff = self._read_register(_REGISTER_CAL_DATA, 21)
         # See datasheet, pg. 27, table 22
@@ -205,15 +210,15 @@ class BMP3XX:
             coeff[13] / 2**65.0,
         )  # P11
 
-    def _read_byte(self, register):
+    def _read_byte(self, register: int) -> int:
         """Read a byte register value and return it"""
         return self._read_register(register, 1)[0]
 
-    def _read_register(self, register, length):
+    def _read_register(self, register: int, length: int) -> bytearray:
         """Low level register reading, not implemented in base class"""
         raise NotImplementedError()
 
-    def _write_register_byte(self, register, value):
+    def _write_register_byte(self, register: int, value: int) -> None:
         """Low level register writing, not implemented in base class"""
         raise NotImplementedError()
 
@@ -252,13 +257,13 @@ class BMP3XX_I2C(BMP3XX):
 
     """
 
-    def __init__(self, i2c, address=0x77):
+    def __init__(self, i2c: I2C, address: int = 0x77) -> None:
         from adafruit_bus_device import i2c_device
 
         self._i2c = i2c_device.I2CDevice(i2c, address)
         super().__init__()
 
-    def _read_register(self, register, length):
+    def _read_register(self, register: int, length: int) -> bytearray:
         """Low level register reading over I2C, returns a list of values"""
         result = bytearray(length)
         with self._i2c as i2c:
@@ -266,7 +271,7 @@ class BMP3XX_I2C(BMP3XX):
             i2c.readinto(result)
             return result
 
-    def _write_register_byte(self, register, value):
+    def _write_register_byte(self, register: int, value: int) -> None:
         """Low level register writing over I2C, writes one 8-bit value"""
         with self._i2c as i2c:
             i2c.write(bytes((register & 0xFF, value & 0xFF)))
@@ -308,7 +313,7 @@ class BMP3XX_SPI(BMP3XX):
 
     """
 
-    def __init__(self, spi, cs):
+    def __init__(self, spi: SPI, cs: DigitalInOut) -> None:
         from adafruit_bus_device import spi_device
 
         self._spi = spi_device.SPIDevice(spi, cs)
@@ -317,7 +322,7 @@ class BMP3XX_SPI(BMP3XX):
             time.sleep(0.001)
         super().__init__()
 
-    def _read_register(self, register, length):
+    def _read_register(self, register: int, length: int) -> bytearray:
         """Low level register reading over SPI, returns a list of values"""
         result = bytearray(length)
         with self._spi as spi:
@@ -326,7 +331,7 @@ class BMP3XX_SPI(BMP3XX):
             spi.readinto(result)
         return result
 
-    def _write_register_byte(self, register, value):
+    def _write_register_byte(self, register: int, value: int) -> None:
         """Low level register writing over SPI, writes one 8-bit value"""
         with self._spi as spi:
             # pylint: disable=no-member
