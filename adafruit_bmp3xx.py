@@ -34,7 +34,6 @@ from micropython import const
 
 try:
     from typing import Tuple
-    from typing_extensions import Literal
     from digitalio import DigitalInOut
     from busio import I2C, SPI
 except ImportError:
@@ -97,7 +96,7 @@ class BMP3XX:
         return _OSR_SETTINGS[self._read_byte(_REGISTER_OSR) & 0x07]
 
     @pressure_oversampling.setter
-    def pressure_oversampling(self, oversample: Literal[1, 2, 4, 8, 16, 32]) -> None:
+    def pressure_oversampling(self, oversample: int) -> None:
         if oversample not in _OSR_SETTINGS:
             raise ValueError(f"Oversampling must be one of: {_OSR_SETTINGS}")
         new_setting = self._read_byte(_REGISTER_OSR) & 0xF8 | _OSR_SETTINGS.index(
@@ -111,7 +110,7 @@ class BMP3XX:
         return _OSR_SETTINGS[self._read_byte(_REGISTER_OSR) >> 3 & 0x07]
 
     @temperature_oversampling.setter
-    def temperature_oversampling(self, oversample: Literal[1, 2, 4, 8, 16, 32]) -> None:
+    def temperature_oversampling(self, oversample: int) -> None:
         if oversample not in _OSR_SETTINGS:
             raise ValueError(f"Oversampling must be one of: {_OSR_SETTINGS}")
         new_setting = (
@@ -125,7 +124,7 @@ class BMP3XX:
         return _IIR_SETTINGS[self._read_byte(_REGISTER_CONFIG) >> 1 & 0x07]
 
     @filter_coefficient.setter
-    def filter_coefficient(self, coef: Literal[0, 2, 4, 8, 16, 32, 64, 128]) -> None:
+    def filter_coefficient(self, coef: int) -> None:
         if coef not in _IIR_SETTINGS:
             raise ValueError(f"Filter coefficient must be one of: {_IIR_SETTINGS}")
         self._write_register_byte(_REGISTER_CONFIG, _IIR_SETTINGS.index(coef) << 1)
