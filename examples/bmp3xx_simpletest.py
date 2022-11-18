@@ -7,6 +7,7 @@ import adafruit_bmp3xx
 
 # I2C setup
 i2c = board.I2C()  # uses board.SCL and board.SDA
+# i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 bmp = adafruit_bmp3xx.BMP3XX_I2C(i2c)
 
 # SPI setup
