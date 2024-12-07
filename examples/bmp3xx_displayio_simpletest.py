@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-# Simple demo of the VL53L0X distance sensor using a built-in display.
+# Simple demo of the BMP3XX pressure sensor using a built-in display.
 import time
 import board
 from adafruit_display_text.bitmap_label import Label
