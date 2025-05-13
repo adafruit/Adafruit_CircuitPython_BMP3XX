@@ -2,7 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 import time
+
 import board
+
 import adafruit_bmp3xx
 
 # I2C setup
@@ -20,7 +22,5 @@ bmp.pressure_oversampling = 8
 bmp.temperature_oversampling = 2
 
 while True:
-    print(
-        "Pressure: {:6.4f}  Temperature: {:5.2f}".format(bmp.pressure, bmp.temperature)
-    )
+    print(f"Pressure: {bmp.pressure:6.4f}  Temperature: {bmp.temperature:5.2f}")
     time.sleep(1)
