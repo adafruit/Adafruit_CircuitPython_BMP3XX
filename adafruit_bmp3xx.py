@@ -27,6 +27,7 @@ Implementation Notes
   https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 
 """
+
 import struct
 import time
 
@@ -34,8 +35,9 @@ from micropython import const
 
 try:
     from typing import Tuple
-    from digitalio import DigitalInOut
+
     from busio import I2C, SPI
+    from digitalio import DigitalInOut
 except ImportError:
     pass
 
@@ -45,7 +47,6 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_BMP3XX.git"
 _BMP388_CHIP_ID = const(0x50)
 _BMP390_CHIP_ID = const(0x60)
 
-# pylint: disable=import-outside-toplevel
 _REGISTER_CHIPID = const(0x00)
 _REGISTER_STATUS = const(0x03)
 _REGISTER_PRESSUREDATA = const(0x04)
@@ -66,7 +67,7 @@ class BMP3XX:
 
     def __init__(self) -> None:
         chip_id = self._read_byte(_REGISTER_CHIPID)
-        if chip_id not in (_BMP388_CHIP_ID, _BMP390_CHIP_ID):
+        if chip_id not in {_BMP388_CHIP_ID, _BMP390_CHIP_ID}:
             raise RuntimeError(f"Failed to find BMP3XX! Chip ID {hex(chip_id)}")
         self._read_coefficients()
         self.reset()
@@ -99,9 +100,7 @@ class BMP3XX:
     def pressure_oversampling(self, oversample: int) -> None:
         if oversample not in _OSR_SETTINGS:
             raise ValueError(f"Oversampling must be one of: {_OSR_SETTINGS}")
-        new_setting = self._read_byte(_REGISTER_OSR) & 0xF8 | _OSR_SETTINGS.index(
-            oversample
-        )
+        new_setting = self._read_byte(_REGISTER_OSR) & 0xF8 | _OSR_SETTINGS.index(oversample)
         self._write_register_byte(_REGISTER_OSR, new_setting)
 
     @property
@@ -113,9 +112,7 @@ class BMP3XX:
     def temperature_oversampling(self, oversample: int) -> None:
         if oversample not in _OSR_SETTINGS:
             raise ValueError(f"Oversampling must be one of: {_OSR_SETTINGS}")
-        new_setting = (
-            self._read_byte(_REGISTER_OSR) & 0xC7 | _OSR_SETTINGS.index(oversample) << 3
-        )
+        new_setting = self._read_byte(_REGISTER_OSR) & 0xC7 | _OSR_SETTINGS.index(oversample) << 3
         self._write_register_byte(_REGISTER_OSR, new_setting)
 
     @property
@@ -135,10 +132,8 @@ class BMP3XX:
         """
         self._write_register_byte(_REGISTER_CMD, 0xB6)
 
-    def _read(self) -> Tuple[float, float]:
+    def _read(self) -> Tuple[float, float]:  # noqa: PLR0914
         """Returns a tuple for temperature and pressure."""
-        # OK, pylint. This one is all kinds of stuff you shouldn't worry about.
-        # pylint: disable=invalid-name, too-many-locals
 
         # Perform one measurement in forced mode
         self._write_register_byte(_REGISTER_CONTROL, 0x13)
@@ -258,7 +253,7 @@ class BMP3XX_I2C(BMP3XX):
     """
 
     def __init__(self, i2c: I2C, address: int = 0x77) -> None:
-        from adafruit_bus_device import i2c_device
+        from adafruit_bus_device import i2c_device  # noqa: PLC0415
 
         self._i2c = i2c_device.I2CDevice(i2c, address)
         super().__init__()
@@ -314,7 +309,7 @@ class BMP3XX_SPI(BMP3XX):
     """
 
     def __init__(self, spi: SPI, cs: DigitalInOut) -> None:
-        from adafruit_bus_device import spi_device
+        from adafruit_bus_device import spi_device  # noqa: PLC0415
 
         self._spi = spi_device.SPIDevice(spi, cs)
         # toggle CS low/high to put BMP3XX in SPI mode
@@ -326,7 +321,6 @@ class BMP3XX_SPI(BMP3XX):
         """Low level register reading over SPI, returns a list of values"""
         result = bytearray(length)
         with self._spi as spi:
-            # pylint: disable=no-member
             spi.write(bytes((0x80 | register, 0x00)))
             spi.readinto(result)
         return result
@@ -334,5 +328,4 @@ class BMP3XX_SPI(BMP3XX):
     def _write_register_byte(self, register: int, value: int) -> None:
         """Low level register writing over SPI, writes one 8-bit value"""
         with self._spi as spi:
-            # pylint: disable=no-member
             spi.write(bytes((register & 0x7F, value & 0xFF)))
